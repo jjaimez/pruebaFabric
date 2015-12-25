@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Simple Unfollow</string>
+    <string name="buttonUnfollow">Dejar de seguir a quienes no me siguen</string>
+    <string name="buttonFollow">Seguir a quienes no sigo</string>
+    <string name="buttonBoth">Ambas opciones</string>
+    <string name="loading">Cargando, por favor espere</string>
+    <string name="actionEnded">Acción terminada</string>
+    <string name="stoppeFollowing">Unfollow: </string>
+    <string name="people">personas</string>
+    <string name="following">Follow: </string>
+    <string name="actionCompleted">Acción finalizada con exito</string>
+    <string name="actionError">A ocurrido un error, por favor vuelva a intentarlo más tarde</string>
+    <string name="actionErrorTitle">Ups...</string>
+    <string name="Loading">Cargando</string>
+    <string name="pleaseWait">Espere por favor...</string>
+    <string name="offline">Sin conexión</string>
+    <string name="needConeccion">Para utilizar esta aplicación necesitas Internet</string>
+    <string name="processComplete">Proceso completo</string>
+    <string name="processProgress">Proceso en curso</string>
+</resources>

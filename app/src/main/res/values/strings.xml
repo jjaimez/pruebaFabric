@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Simple Unfollow</string>
+    <string name="buttonUnfollow">Unfollow people who don\'t follow me</string>
+    <string name="buttonFollow">Follow people who I don\'t follow</string>
+    <string name="buttonBoth">Both options</string>
+    <string name="loading">loading, please wait</string>
+    <string name="actionEnded">Action ended</string>
+    <string name="stoppeFollowing">Unfollow: </string>
+    <string name="people">people</string>
+    <string name="following">Follow: </string>
+    <string name="actionCompleted">Action completed successfully</string>
+    <string name="actionError">An error has occurred, please try again later</string>
+    <string name="actionErrorTitle">Oops...</string>
+    <string name="Loading">Loading</string>
+    <string name="pleaseWait">Please wait...</string>
+    <string name="offline">Without coneccion</string>
+    <string name="needConeccion">You need internet to use this application</string>
+    <string name="processComplete">Complete process</string>
+    <string name="processProgress">Process in progress</string>
+</resources>

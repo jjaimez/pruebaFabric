@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayoutGrande"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
+
+    tools:context=".MainActivity"
+    style="@style/AppTheme"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:gravity="center">
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tecpro.pruebafabric.MainActivity"
+    android:orientation="vertical"
+    android:background="@drawable/backgroundradial"
+    android:gravity="center">
+
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/twitter_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+
+    <com.tecpro.pruebafabric.MyCustomTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text=" SIMPLE. "
+        android:id="@+id/textView4"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:textColor="@android:color/white"
+        android:textSize="40dp"/>
+
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=" "
+        android:id="@+id/textView3"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        />
+
+    <com.tecpro.pruebafabric.MyCustomButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonUnfollow"
+        android:id="@+id/buttonUnfollow"
+        android:layout_alignTop="@+id/twitter_login_button"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:onClick="v"
+        android:background="#262a31"
+        android:textColor="#b3b3b3"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        style="?android:attr/buttonStyleSmall"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=" "
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"/>
+
+    <com.tecpro.pruebafabric.MyCustomButton
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonFollow"
+        android:id="@+id/buttonFollow"
+        android:layout_alignTop="@+id/twitter_login_button"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:onClick="v"
+        android:background="#262a31"
+        android:textColor="#b3b3b3"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        style="?android:attr/buttonStyleSmall" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=" "
+        android:id="@+id/textView2"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"/>
+
+    <com.tecpro.pruebafabric.MyCustomButton
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonBoth"
+        android:id="@+id/buttonBoth"
+        android:layout_alignTop="@+id/twitter_login_button"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:onClick="v"
+        android:background="#4094f7"
+        android:textColor="@android:color/white"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        style="?android:attr/buttonStyleSmall"/>
+</LinearLayout>
+
+
+</LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center|right">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:src="@drawable/powered_by"
+            android:layout_gravity="center|bottom"
+            android:onClick="pgWeb"
+            android:clickable="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="  "
+            android:id="@+id/textView6"
+            android:layout_gravity="bottom" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2"
+            android:src="@drawable/contact"
+            android:layout_gravity="bottom|right"
+            android:clickable="true"
+            android:onClick="pgWeb" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
