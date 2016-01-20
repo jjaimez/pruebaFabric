@@ -1,11 +1,16 @@
 package com.tecpro.pruebafabric;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.twitter.sdk.android.Twitter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
@@ -25,6 +30,8 @@ public class MyIntentService extends IntentService {
     public static final String succesFollowString = "succesFollowString";
     public static final String succesUnfollowString = "succesUnfollowString";
     public static final String ACTION_FIN = "com.tecpro.pruebafabric.action.FIN";
+    public static final String ACTION_ERROR = "com.tecpro.pruebafabric.action.ERROR";
+    public static final String ACTION_NOCONNECTION = "com.tecpro.pruebafabric.action.NOCONNECTION";
 
     public MyIntentService() {
         super("MyIntentService");
@@ -57,28 +64,43 @@ public class MyIntentService extends IntentService {
 
         @Override
         protected MyTwitterApiClient.Ids doInBackground(String... params) {
-            return client.getFollowersService().idsByUserIdCursor(uid, cursorFollowers);
+            if (checkConnectivity()) {
+                try {
+                    return client.getFollowersService().idsByUserIdCursor(uid, cursorFollowers);
+                } catch (Exception e) {
+                    Intent bcIntent = new Intent();
+                    bcIntent.setAction(ACTION_ERROR);
+                    sendBroadcast(bcIntent);
+                }
+            } else {
+                Intent bcIntent = new Intent();
+                bcIntent.setAction(ACTION_NOCONNECTION);
+                sendBroadcast(bcIntent);
+            }
+            return null;
         }
 
         @Override
         protected void onPostExecute(MyTwitterApiClient.Ids result) {
-            for (Long l : result.ids){
-                followers.add(l);
-            }
-            cursorFollowers = result.nextCursor;
-            if (cursorFollowers != 0) {
-                if (contFollow % 15 == 0){
-                    try {
-                        Thread.sleep(900000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            if (result != null) {
+                for (Long l : result.ids) {
+                    followers.add(l);
                 }
-                contFollow++;
-                new AsyncCallerFollowers().execute();
-            } else {
-                contFriends++;
-                new AsyncCallerFriends().execute();
+                cursorFollowers = result.nextCursor;
+                if (cursorFollowers != 0) {
+                    if (contFollow % 15 == 0) {
+                        try {
+                            Thread.sleep(900000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    contFollow++;
+                    new AsyncCallerFollowers().execute();
+                } else {
+                    contFriends++;
+                    new AsyncCallerFriends().execute();
+                }
             }
         }
     }
@@ -89,43 +111,102 @@ public class MyIntentService extends IntentService {
 
         @Override
         protected MyTwitterApiClient.Ids doInBackground(String... params) {
-            return client.getFriendsService().idsByUserIdCursor(uid, cursorFriends);
+            if (checkConnectivity()) {
+                try {
+                    return client.getFriendsService().idsByUserIdCursor(uid, cursorFriends);
+                } catch (Exception e) {
+                    Intent bcIntent = new Intent();
+                    bcIntent.setAction(ACTION_ERROR);
+                    sendBroadcast(bcIntent);
+                }
+            } else {
+                Intent bcIntent = new Intent();
+                bcIntent.setAction(ACTION_NOCONNECTION);
+                sendBroadcast(bcIntent);
+            }
+            return null;
         }
 
         @Override
         protected void onPostExecute(MyTwitterApiClient.Ids result) {
-            for (Long l : result.ids){
-                friends.add(l);
-            }
-            cursorFriends = result.nextCursor;
-            if (cursorFriends != 0) {
-                if (contFriends % 15 == 0) {
-                    try {
-                        Thread.sleep(900000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            if (result != null) {
+                for (Long l : result.ids) {
+                    friends.add(l);
                 }
-                contFriends++;
-                new AsyncCallerFriends().execute();
-            } else {
-                toAdd.addAll(followers);
-                toAdd.removeAll(friends);
-                toDelete.addAll(friends);
-                toDelete.removeAll(followers);
-                if (unfollow && !toDelete.isEmpty()) {
+                cursorFriends = result.nextCursor;
+                if (cursorFriends != 0) {
+                    if (contFriends % 15 == 0) {
+                        try {
+                            Thread.sleep(900000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    contFriends++;
+                    new AsyncCallerFriends().execute();
+                } else {
+
+                    Collections.sort(followers);
+                    Collections.sort(friends);
+                    toAdd = new ArrayList<>();
+                    toDelete = new ArrayList<>();
+                    int j = 0;
+                    int i = 0;
+                    while (inRange(i,j)){
+                        Long a = followers.get(i);
+                        Long b = friends.get(j);
+                        while (a.compareTo(b) < 0){
+                            toAdd.add(a);
+                            ++i;
+                            if (inRange(i,j))
+                                a = followers.get(i);
+                            else
+                                break;
+                        }
+                        if (inRange(i,j)) {
+                            if (a.equals(b)) {
+                                ++i;
+                                ++j;
+                                if (inRange(i, j)) {
+                                    a = followers.get(i);
+                                    b = friends.get(j);
+                                } else
+                                    break;
+                            }
+                            while (a.compareTo(b) > 0) {
+                                toDelete.add(b);
+                                ++j;
+                                if (inRange(i, j))
+                                    b = friends.get(j);
+                                else
+                                    break;
+                            }
+                        } else
+                            break;
+                    }
+                    while (i < followers.size()){
+                        toAdd.add(followers.get(i));
+                        i++;
+                    }
+                    while (j < friends.size()){
+                        toDelete.add(friends.get(j));
+                        j++;
+                    }
+
+                    if (unfollow && !toDelete.isEmpty()) {
                         new AsyncCallerDeleteFriend().execute();
                     } else {
                         if (follow && !toAdd.isEmpty()) {
-                                new AsyncCallerAddFriend().execute();
+                            new AsyncCallerAddFriend().execute();
                         } else {
-                             Intent bcIntent = new Intent();
-                            bcIntent.putExtra("succesFollowString",succesFollow);
-                            bcIntent.putExtra("succesUnfollow",succesUnfollow);
+                            Intent bcIntent = new Intent();
+                            bcIntent.putExtra("succesFollowString", succesFollow);
+                            bcIntent.putExtra("succesUnfollow", succesUnfollow);
                             bcIntent.setAction(ACTION_FIN);
                             sendBroadcast(bcIntent);
                         }
                     }
+                }
             }
         }
     }
@@ -138,25 +219,7 @@ public class MyIntentService extends IntentService {
             try {
                 return client.getFriendshipsDestroyService().friendshipsDestroy(toDelete.get(0));
             } catch (Exception e) {
-                try {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e1) {
-                        e.printStackTrace();
-                    }
-                    return client.getFriendshipsDestroyService().friendshipsDestroy(toDelete.get(0));
-                } catch (Exception e3) {
-                    try {
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e2) {
-                            e2.printStackTrace();
-                        }
-                        return client.getFriendshipsDestroyService().friendshipsDestroy(toDelete.get(0));
-                    } catch (Exception e4) {
-                        return null;
-                    }
-                }
+                return null;
             }
         }
 
@@ -223,6 +286,27 @@ public class MyIntentService extends IntentService {
                 sendBroadcast(bcIntent);
             }
         }
-
     }
+
+    /**
+     *
+     * @return true si hay conexion a internet
+     */
+    private boolean checkConnectivity()
+    {
+        boolean enabled = true;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+
+        if ((info == null || !info.isConnected() || !info.isAvailable()))
+        {
+            enabled = false;
+        }
+        return enabled;
+    }
+
+    private boolean inRange(int i, int j){
+        return (i < followers.size() && j < friends.size());
+    }
+
 }

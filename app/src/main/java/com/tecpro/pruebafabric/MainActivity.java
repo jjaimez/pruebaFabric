@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(MyIntentService.ACTION_FIN);
+        filter.addAction(MyIntentService.ACTION_ERROR);
+        filter.addAction(MyIntentService.ACTION_NOCONNECTION);
         ProgressReceiver rcv = new ProgressReceiver();
         registerReceiver(rcv, filter);
 
@@ -107,15 +109,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if(!checkConnectivity()) {
-            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-            alertDialog.setTitle(getResources().getString(R.string.offline));
-            alertDialog.setMessage(getResources().getString(R.string.needConeccion));
-            alertDialog.setIcon(R.drawable.error);
-            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            });
-            alertDialog.show();
+            noConnectionMsg();
         }
     }
 
@@ -273,6 +267,14 @@ public class MainActivity extends AppCompatActivity {
                 running = false;
                 endAction();
             }
+            if(intent.getAction().equals(MyIntentService.ACTION_ERROR)) {
+                running = false;
+                errorMsg();
+            }
+            if(intent.getAction().equals(MyIntentService.ACTION_NOCONNECTION)) {
+                running = false;
+                noConnectionMsg();
+            }
         }
     }
 
@@ -312,9 +314,7 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     // Sleep for 5 seconds
                                     Thread.sleep(5 * 1000);
-                                } catch (InterruptedException e) {
-                                    Log.d("da", "sleep failure");
-                                }
+                                } catch (InterruptedException e) {}
                             }
                             mBuilder.setContentText(getResources().getString(R.string.processComplete))
 
@@ -365,6 +365,41 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void noConnectionMsg(){
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle(getResources().getString(R.string.offline));
+        alertDialog.setMessage(getResources().getString(R.string.needConeccion));
+        alertDialog.setIcon(R.drawable.error);
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                nm.cancel(ID_NOTIFICACION);
+                pressed = false;
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                }
+            }
+        });
+        alertDialog.show();
+    }
+
+    public void errorMsg(){
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle(getResources().getString(R.string.error));
+        alertDialog.setMessage(getResources().getString(R.string.errorOccurred));
+        alertDialog.setIcon(R.drawable.error);
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                nm.cancel(ID_NOTIFICACION);
+                pressed = false;
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                }
+            }
+        });
+        alertDialog.show();
+    }
 
 }
 

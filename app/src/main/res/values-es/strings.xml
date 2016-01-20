@@ -17,4 +17,6 @@
     <string name="needConeccion">Para utilizar esta aplicación necesitas Internet</string>
     <string name="processComplete">Proceso completo</string>
     <string name="processProgress">Proceso en curso</string>
+    <string name="error">Error</string>
+    <string name="errorOccurred">Se ha producido un error, por favor inténtelo de nuevo en 15 minutos</string>
 </resources>
