@@ -55,9 +55,8 @@ public class MainActivity extends AppCompatActivity {
     NotificationCompat.Builder mBuilder;
 
 
-    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "oloJdvViss9uzQudPIv3fzeuI";
-    private static final String TWITTER_SECRET = "w3D6uITrlEu62K1uIDYMUSUlyaCa7y1PQvtOyT7jLDOxQCE3AT";
+    private static final String TWITTER_KEY = "Wt4ZPtflP0cniuqRe4vmL3lqG";
+    private static final String TWITTER_SECRET = "519rfslN93auYvmXJ0Fm6ltxuKoh5DGBDjYdnSifWLhSDT3jXP";
 
 
     @Override
